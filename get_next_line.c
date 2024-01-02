@@ -6,38 +6,105 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 09:39:59 by dodordev          #+#    #+#             */
-/*   Updated: 2023/12/27 10:40:49 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/02 12:28:32 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char		*_fill_line_buffer(int fd, char *left_c, char *buffer);
-static char		*_set_line(char *line);
-static char		*ft_strchr(char *s, int c);
+static char	*fill_buffer(int fd, char *left_c, char *buffer);
+static char	*set_line(char *line);
+static char	*ft_strchr(char *s, int c);
 
 char	*get_next_line(int fd)
 {
-	static char	*left_c;
+	static char	*upend_char;
 	char		*line;
 	char		*buffer;
 
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
-		free(left_c);
+		free(upend_char);
 		free(buffer);
-		left_c = NULL;
+		upend_char = NULL;
 		buffer = NULL;
-		return (0);
+		return (NULL);
 	}
 	if (!buffer)
 		return (NULL);
-	line = _fill_line_buffer(fd, left_c, buffer);
+	line = fill_buffer(fd, upend_char, buffer);
 	free(buffer);
 	buffer = NULL;
 	if (!line)
 		return (NULL);
-	left_c = _set_line(line);
+	upend_char = set_line(line);
 	return (line);
+}
+
+static char	*fill_buffer(int fd, char *upend_char, char *buffer)
+{
+	ssize_t	buffer_read;
+	char	*tmp;
+
+	buffer_read = 1;
+	while (buffer_read > 0)
+	{
+		buffer_read = read(fd, buffer, BUFFER_SIZE);
+		if (buffer_read == -1)
+		{
+			free(upend_char);
+			return (NULL);
+		}
+		else if (buffer_read == 0)
+			break ;
+		buffer[buffer_read] = 0;
+		if (!upend_char)
+			upend_char = ft_strdup("");
+		tmp = upend_char;
+		upend_char = ft_strjoin(tmp, buffer);
+		free(tmp);
+		tmp = NULL;
+		if (ft_strchr(buffer, '\n'))
+			break ;
+	}
+	return (upend_char);
+}
+
+static char	*set_line(char *line_buffer)
+{
+	char	*upend_char;
+	ssize_t	i;
+
+	i = 0;
+	while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
+		i++;
+	if (line_buffer[i] == 0 || line_buffer[1] == 0)
+		return (NULL);
+	upend_char = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
+	if (*upend_char == 0)
+	{
+		free(upend_char);
+		upend_char = NULL;
+	}
+	line_buffer[i + 1] = 0;
+	return (upend_char);
+}
+
+static char	*ft_strchr(char *s, int c)
+{
+	unsigned int	i;
+	char			cc;
+
+	i = 0;
+	cc = (char)c;
+	while (s[i])
+	{
+		if (s[i] == cc)
+			return ((char *)&s[i]);
+		i++;
+	}
+	if (s[i] == cc)
+		return ((char *)&s[i]);
+	return (NULL);
 }
