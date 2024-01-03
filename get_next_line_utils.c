@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:51:24 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/03 19:13:54 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/03 19:34:02 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@ char	*ft_strdup(char *s1)
 	size_t	i;
 
 	dest = (char *)malloc(ft_strlen(s1) + 1);
-	i = 0;
 	if (!dest)
-		return (0);
+		return (NULL);
+	i = 0;
 	while (s1[i])
 	{
 		dest[i] = s1[i];
 		i++;
 	}
-	dest[i] = 0;
+	dest[i] = '\0';
 	return (dest);
 }
 
@@ -50,6 +50,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		str[i] = s[start + i];
 		i++;
 	}
+	str[i] = '\0';
 	return (str);
 }
 
@@ -69,7 +70,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	i = 0;
 	while (s2[i])
 		final[j++] = s2[i++];
-	final[j] = 0;
+	final[j] = '\0';
 	return (final);
 }
 
