@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:51:24 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/02 12:25:15 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/03 19:13:54 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,29 @@ char	*ft_strdup(char *s1)
 	}
 	dest[i] = 0;
 	return (dest);
+}
+
+char	*ft_substr(char *s, unsigned int start, size_t len)
+{
+	char	*str;
+	size_t	i;
+
+	i = 0;
+	if (!s)
+		return (NULL);
+	if (start > ft_strlen(s))
+		return (malloc(1));
+	if (len > ft_strlen(s + start))
+		len = ft_strlen(s + start);
+	str = malloc((len + 1) * sizeof(char));
+	if (!str)
+		return (NULL);
+	while (i < len)
+	{
+		str[i] = s[start + i];
+		i++;
+	}
+	return (str);
 }
 
 char	*ft_strjoin(char *s1, char *s2)

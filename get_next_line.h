@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 09:40:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/02 12:22:35 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/03 19:13:51 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdint.h>
 
 char	*get_next_line(int fd);
 char	*ft_strdup(char *s);
