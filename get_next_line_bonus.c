@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:25:07 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/04 13:57:51 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:33:24 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,104 +42,34 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-static char	*read_and_concatenate(int fd, char *upend_char, char *buffer)
-{
-	size_t	buffer_read;
-	char	*temp;
-
-	buffer_read = read(fd, buffer, BUFFER_SIZE);
-	if (buffer_read <= 0)
-		return (NULL);
-	buffer[buffer_read] = '\0';
-	temp = ft_strjoin(upend_char, buffer);
-	if (temp == NULL)
-		return (NULL);
-	return (temp);
-}
-
-static char	*fill_buffer(int fd, char *upend_char, char *buffer)
-{
-	char	*temp;
-
-	while (1)
-	{
-		temp = read_and_concatenate(fd, upend_char, buffer);
-		if (temp == NULL)
-		{
-			free(upend_char);
-			return (NULL);
-		}
-		free(upend_char);
-		upend_char = temp;
-		if (ft_strchr(buffer, '\n'))
-			break ;
-	}
-	return (upend_char);
-}
-
-/*
-static char	*fill_buffer(int fd, char *upend_char, char *buffer)
-{
-	size_t	buffer_read;
-	char	temp;
-
-	buffer_read = 1;
-	while (buffer_read > 0)
-	{
-		buffer_read = read(fd, buffer, BUFFER_SIZE);
-		if (buffer_read <= 0)
-			break ;
-	buffer[buffer_read] = '\0';
-	temp = ft_strjoin(upend_char, buffer);
-	{
-		if (temp != NULL)
-		{
-			free(upend_char);
-			upend_char = temp;
-		}
-		else
-		{
-			free(buffer);
-			free(upend_char);
-			return (NULL);
-		}
-	}
-	if (ft_strchr(buffer, '\n'))
-		break ;
-	}
-	return (upend_char);
-}
-
 static char	*fill_buffer(int fd, char *upend_char, char *buffer)
 {
 	ssize_t	buffer_read;
-	char	*temp;
-	size_t	upend_len;
+	char	*tmp;
 
-	upend_len = ft_strlen(upend_char);
 	buffer_read = 1;
 	while (buffer_read > 0)
 	{
 		buffer_read = read(fd, buffer, BUFFER_SIZE);
-		if (buffer_read <= 0)
-			break ;
-		buffer[buffer_read] = '\0';
-		temp = (char *)malloc((upend_len + buffer_read + 1) * sizeof(char));
-		if (!temp)
+		if (buffer_read == -1)
 		{
 			free(upend_char);
 			return (NULL);
 		}
-		ft_strcpy(temp, upend_char);
-		ft_strcat(temp, buffer);
-		upend_char = temp;
-		upend_len += buffer_read;
+		else if (buffer_read == 0)
+			break ;
+		buffer[buffer_read] = 0;
+		if (!upend_char)
+			upend_char = ft_strdup("");
+		tmp = upend_char;
+		upend_char = ft_strjoin(tmp, buffer);
+		free(tmp);
+		tmp = NULL;
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
 	return (upend_char);
 }
-*/
 
 static char	*set_line(char *line_buffer)
 {
@@ -149,7 +79,7 @@ static char	*set_line(char *line_buffer)
 	i = 0;
 	while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
 		i++;
-	if (line_buffer[i] == '\0' || line_buffer[i + 1] == '\0')
+	if (line_buffer[i] == 0 || line_buffer[1] == 0)
 		return (NULL);
 	upend_char = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
 	if (*upend_char == 0)

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 09:39:59 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/04 13:58:58 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/02 12:28:32 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,42 +42,6 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-static char	*read_and_concatenate(int fd, char *upend_char, char *buffer)
-{
-	size_t	buffer_read;
-	char	*temp;
-
-	buffer_read = read(fd, buffer, BUFFER_SIZE);
-	if (buffer_read <= 0)
-		return (NULL);
-	buffer[buffer_read] = '\0';
-	temp = ft_strjoin(upend_char, buffer);
-	if (temp == NULL)
-		return (NULL);
-	return (temp);
-}
-
-static char	*fill_buffer(int fd, char *upend_char, char *buffer)
-{
-	char	*temp;
-
-	while (1)
-	{
-		temp = read_and_concatenate(fd, upend_char, buffer);
-		if (temp == NULL)
-		{
-			free(upend_char);
-			return (NULL);
-		}
-		free(upend_char);
-		upend_char = temp;
-		if (ft_strchr(buffer, '\n'))
-			break ;
-	}
-	return (upend_char);
-}
-
-/*
 static char	*fill_buffer(int fd, char *upend_char, char *buffer)
 {
 	ssize_t	buffer_read;
@@ -106,7 +70,6 @@ static char	*fill_buffer(int fd, char *upend_char, char *buffer)
 	}
 	return (upend_char);
 }
-*/
 
 static char	*set_line(char *line_buffer)
 {
@@ -116,7 +79,7 @@ static char	*set_line(char *line_buffer)
 	i = 0;
 	while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
 		i++;
-	if (line_buffer[i] == '\0' || line_buffer[i + 1] == '\0')
+	if (line_buffer[i] == 0 || line_buffer[1] == 0)
 		return (NULL);
 	upend_char = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
 	if (*upend_char == 0)
