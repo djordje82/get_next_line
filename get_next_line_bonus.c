@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:25:07 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/05 14:05:24 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:33:24 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,6 @@
 static char	*fill_buffer(int fd, char *left_c, char *buffer);
 static char	*set_line(char *line);
 static char	*ft_strchr(char *s, int c);
-static int	is_valid_fd(int fd);
-
-static int	is_valid_fd(int fd)
-{
-	return (fd >= 0 && fd < MAX_FD && BUFFER_SIZE > 0 && read(fd, 0, 0) >= 0);
-}
 
 char	*get_next_line(int fd)
 {
@@ -29,17 +23,19 @@ char	*get_next_line(int fd)
 	char		*buffer;
 
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!is_valid_fd(fd) || !buffer)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
-		if (fd >= 0 && fd < MAX_FD)
-			free(upend_char[fd]);
+		free(upend_char[fd]);
 		free(buffer);
-		if (fd >= 0 && fd < MAX_FD)
-			upend_char[fd] = NULL;
+		upend_char[fd] = NULL;
+		buffer = NULL;
 		return (NULL);
 	}
+	if (!buffer)
+		return (NULL);
 	line = fill_buffer(fd, upend_char[fd], buffer);
 	free(buffer);
+	buffer = NULL;
 	if (!line)
 		return (NULL);
 	upend_char[fd] = set_line(line);
