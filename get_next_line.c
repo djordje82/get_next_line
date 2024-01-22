@@ -6,105 +6,86 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 09:39:59 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/02 12:28:32 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/22 12:30:12 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*fill_buffer(int fd, char *left_c, char *buffer);
-static char	*set_line(char *line);
-static char	*ft_strchr(char *s, int c);
+static void	copy_s2_in_s1(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s2[i])
+	{
+		s1[i] = s2[i];
+		i++;
+	}
+	s1[i] = '\0';
+}
+
+static int	find_line(char *buf, char **line)
+{
+	int		i;
+	int		j;
+	int		flag_line;
+	char	*find_line;
+
+	i = 0;
+	j = 0;
+	while (buf[i] && buf[i] != '\n')
+		i++;
+	flag_line = 0;
+	if (buf[i] == '\n')
+		flag_line = 1;
+	find_line = ft_calloc(i + flag_line + 1, 1);
+	if (find_line == NULL)
+		return (-1);
+	while (j < i + flag_line)
+	{
+		find_line[j] = buf[j];
+		j++;
+	}
+	*line = ft_strjoin(*line, find_line);
+	if (line == NULL)
+		return (-1);
+	copy_s2_in_s1(buf, &buf[i + flag_line]);
+	return (flag_line);
+}
+
+static char	*free_line(char **line)
+{
+	if (*line != NULL)
+		free(*line);
+	return (NULL);
+}
 
 char	*get_next_line(int fd)
 {
-	static char	*upend_char;
+	static char	buf[BUFFER_SIZE + 1];
 	char		*line;
-	char		*buffer;
+	int			count_byte;
+	int			flag_line;
 
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	line = NULL;
+	flag_line = 0;
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	while (flag_line == 0)
 	{
-		free(upend_char);
-		free(buffer);
-		upend_char = NULL;
-		buffer = NULL;
-		return (NULL);
-	}
-	if (!buffer)
-		return (NULL);
-	line = fill_buffer(fd, upend_char, buffer);
-	free(buffer);
-	buffer = NULL;
-	if (!line)
-		return (NULL);
-	upend_char = set_line(line);
-	return (line);
-}
-
-static char	*fill_buffer(int fd, char *upend_char, char *buffer)
-{
-	ssize_t	buffer_read;
-	char	*tmp;
-
-	buffer_read = 1;
-	while (buffer_read > 0)
-	{
-		buffer_read = read(fd, buffer, BUFFER_SIZE);
-		if (buffer_read == -1)
+		flag_line = find_line(buf, &line);
+		if (flag_line == -1)
+			return (free_line(&line));
+		if (flag_line == 0)
 		{
-			free(upend_char);
-			return (NULL);
+			count_byte = read(fd, buf, BUFFER_SIZE);
+			if (count_byte == 0 && *line)
+				flag_line = 1;
+			else if (count_byte <= 0)
+				return (free_line(&line));
+			buf[count_byte] = '\0';
 		}
-		else if (buffer_read == 0)
-			break ;
-		buffer[buffer_read] = 0;
-		if (!upend_char)
-			upend_char = ft_strdup("");
-		tmp = upend_char;
-		upend_char = ft_strjoin(tmp, buffer);
-		free(tmp);
-		tmp = NULL;
-		if (ft_strchr(buffer, '\n'))
-			break ;
 	}
-	return (upend_char);
-}
-
-static char	*set_line(char *line_buffer)
-{
-	char	*upend_char;
-	ssize_t	i;
-
-	i = 0;
-	while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
-		i++;
-	if (line_buffer[i] == 0 || line_buffer[1] == 0)
-		return (NULL);
-	upend_char = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
-	if (*upend_char == 0)
-	{
-		free(upend_char);
-		upend_char = NULL;
-	}
-	line_buffer[i + 1] = 0;
-	return (upend_char);
-}
-
-static char	*ft_strchr(char *s, int c)
-{
-	unsigned int	i;
-	char			cc;
-
-	i = 0;
-	cc = (char)c;
-	while (s[i])
-	{
-		if (s[i] == cc)
-			return ((char *)&s[i]);
-		i++;
-	}
-	if (s[i] == cc)
-		return ((char *)&s[i]);
-	return (NULL);
+	return (line);
 }
