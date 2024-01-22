@@ -6,13 +6,13 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:59:26 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/22 16:59:28 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/22 18:36:08 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-static void	copy_s2_in_s1(char *s1, char *s2)
+static void	copy_newline_to_buf(char *s1, char *s2)
 {
 	int	i;
 
@@ -50,7 +50,7 @@ static int	find_line(char *buf, char **line)
 	*line = ft_strjoin(*line, find_line);
 	if (line == NULL)
 		return (-1);
-	copy_s2_in_s1(buf, &buf[i + flag_line]);
+	copy_newline_to_buf(buf, &buf[i + flag_line]);
 	return (flag_line);
 }
 
@@ -63,9 +63,9 @@ static char	*free_line(char **line)
 
 char	*get_next_line(int fd)
 {
-	static char	buf[1024][BUFFER_SIZE + 1];
+	static char	buf[MAX_FD][BUFFER_SIZE + 1];
 	char		*line;
-	int			count_byte;
+	int			count_bytes;
 	int			flag_line;
 
 	line = NULL;
@@ -79,12 +79,12 @@ char	*get_next_line(int fd)
 			return (free_line(&line));
 		if (flag_line == 0)
 		{
-			count_byte = read(fd, buf[fd], BUFFER_SIZE);
-			if (count_byte == 0 && *line)
+			count_bytes = read(fd, buf[fd], BUFFER_SIZE);
+			if (count_bytes == 0 && *line)
 				flag_line = 1;
-			else if (count_byte <= 0)
+			else if (count_bytes <= 0)
 				return (free_line(&line));
-			buf[fd][count_byte] = '\0';
+			buf[fd][count_bytes] = '\0';
 		}
 	}
 	return (line);

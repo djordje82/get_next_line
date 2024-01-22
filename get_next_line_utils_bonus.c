@@ -6,11 +6,11 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:58:22 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/22 16:58:28 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/22 18:36:17 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static size_t	ft_strlen(const char *s)
 {
