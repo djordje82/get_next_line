@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/27 09:39:59 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/22 17:09:31 by dodordev         ###   ########.fr       */
+/*   Created: 2024/01/22 16:59:26 by dodordev          #+#    #+#             */
+/*   Updated: 2024/01/22 16:59:28 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static void	copy_newline_to_buf(char *s1, char *s2)
+static void	copy_s2_in_s1(char *s1, char *s2)
 {
 	int	i;
 
@@ -50,22 +50,22 @@ static int	find_line(char *buf, char **line)
 	*line = ft_strjoin(*line, find_line);
 	if (line == NULL)
 		return (-1);
-	copy_newline_to_buf(buf, &buf[i + flag_line]);
+	copy_s2_in_s1(buf, &buf[i + flag_line]);
 	return (flag_line);
 }
 
 static char	*free_line(char **line)
 {
-	if (*line != NULL)
+	if (*line)
 		free(*line);
 	return (NULL);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	buf[BUFFER_SIZE + 1];
+	static char	buf[1024][BUFFER_SIZE + 1];
 	char		*line;
-	int			count_bytes;
+	int			count_byte;
 	int			flag_line;
 
 	line = NULL;
@@ -74,17 +74,17 @@ char	*get_next_line(int fd)
 		return (NULL);
 	while (flag_line == 0)
 	{
-		flag_line = find_line(buf, &line);
+		flag_line = find_line(buf[fd], &line);
 		if (flag_line == -1)
 			return (free_line(&line));
 		if (flag_line == 0)
 		{
-			count_bytes = read(fd, buf, BUFFER_SIZE);
-			if (count_bytes == 0 && *line)
+			count_byte = read(fd, buf[fd], BUFFER_SIZE);
+			if (count_byte == 0 && *line)
 				flag_line = 1;
-			else if (count_bytes <= 0)
+			else if (count_byte <= 0)
 				return (free_line(&line));
-			buf[count_bytes] = '\0';
+			buf[fd][count_byte] = '\0';
 		}
 	}
 	return (line);
