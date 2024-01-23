@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:59:26 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/22 18:36:08 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/23 21:04:41 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*get_next_line(int fd)
 
 	line = NULL;
 	flag_line = 0;
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > MAX_FD)
 		return (NULL);
 	while (flag_line == 0)
 	{

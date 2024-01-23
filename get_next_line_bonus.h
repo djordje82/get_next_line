@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:58:46 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/22 18:35:50 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/23 21:05:35 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 15
 # endif
-# define MAX_FD 10240
+# define MAX_FD 1024
 # include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
