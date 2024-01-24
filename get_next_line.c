@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 09:39:59 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/24 15:30:01 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/24 16:02:56 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	find_line(char *buf, char **line)
 		j++;
 	}
 	*line = ft_strjoin(*line, find_line);
-	if (line == NULL)
+	if (*line == NULL)
 		return (-1);
 	copy_newline_to_buf(buf, &buf[i + flag_line]);
 	return (flag_line);

@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:58:22 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/24 15:30:07 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/24 16:02:32 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (s2);
 	newstring = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (newstring == NULL)
-		return (NULL);
+		return (free (s1), free (s2), NULL);
 	while (s1[i])
 	{
 		newstring[i] = s1[i];
