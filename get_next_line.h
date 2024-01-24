@@ -6,15 +6,21 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 09:40:39 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/22 13:14:46 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:31:36 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
+
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 15
 # endif
+
+# ifndef MAX_FD
+#  define MAX_FD 1024
+# endif
+
 # include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>

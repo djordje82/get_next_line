@@ -6,7 +6,7 @@
 /*   By: dodordev <dodordev@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:58:22 by dodordev          #+#    #+#             */
-/*   Updated: 2024/01/22 19:37:01 by dodordev         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:30:07 by dodordev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,31 +22,20 @@ static size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-static	void	*ft_memset(void *b, int c, size_t len)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	unsigned char	*val;
-	int				i;
+	size_t			i;
+	unsigned char	*temp;
 
 	i = 0;
-	val = (unsigned char *)b;
-	while (len > 0)
-	{
-		val[i++] = (unsigned char)c;
-		len--;
-	}
-	return (b);
-}
-
-void	*ft_calloc(size_t count, size_t size)
-{
-	unsigned char	*tmp;
-
-	if (count > 0 && SIZE_MAX / count < size)
+	if (nmemb * size >= 2147483647)
 		return (NULL);
-	tmp = malloc(count * size);
-	if (tmp)
-		ft_memset(tmp, '\0', (count * size));
-	return (tmp);
+	temp = malloc(nmemb * size);
+	if (!temp)
+		return (NULL);
+	while (i < nmemb * size)
+		temp[i++] = 0;
+	return (temp);
 }
 
 char	*ft_strjoin(char *s1, char *s2)
